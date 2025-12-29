@@ -1,13 +1,41 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Helmet } from 'react-helmet-async';
+import Navigation from '@/components/Navigation';
+import HeroSection from '@/components/HeroSection';
+import ProblemSection from '@/components/ProblemSection';
+import SolutionSection from '@/components/SolutionSection';
+import ChatDemo from '@/components/ChatDemo';
+import RoadmapSection from '@/components/RoadmapSection';
+import TeamSection from '@/components/TeamSection';
+import FinancialsSection from '@/components/FinancialsSection';
+import WhyInvestSection from '@/components/WhyInvestSection';
+import ContactSection from '@/components/ContactSection';
+import Footer from '@/components/Footer';
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <>
+      <Helmet>
+        <title>Luka | AI-First Insurance</title>
+        <meta name="description" content="Luka is building the leanest, fastest, and fairest insurance company in the world — powered entirely by artificial intelligence." />
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
+      
+      <div className="min-h-screen bg-background text-foreground">
+        <Navigation />
+        <main>
+          <HeroSection />
+          <ProblemSection />
+          <SolutionSection />
+          <ChatDemo />
+          <RoadmapSection />
+          <TeamSection />
+          <FinancialsSection />
+          <WhyInvestSection />
+          <ContactSection />
+        </main>
+        <Footer />
       </div>
-    </div>
+    </>
   );
 };
 

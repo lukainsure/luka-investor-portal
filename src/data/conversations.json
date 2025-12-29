@@ -1,0 +1,36 @@
+{
+  "insureVehicle": {
+    "title": "Insure a Vehicle",
+    "messages": [
+      { "role": "user", "content": "Hi, I'd like to insure my car.", "delay": 0 },
+      { "role": "agent", "content": "Hey there! I'm Luca, your AI insurance assistant. I'd love to help you get covered today. What type of vehicle are you looking to insure?", "delay": 1500 },
+      { "role": "user", "content": "It's a 2022 Tesla Model 3.", "delay": 2000 },
+      { "role": "agent", "content": "Great choice! Electric vehicles are my favourite. Let me pull up the details for your Tesla Model 3. Just need a few quick things:\n\n• Your postcode?\n• Estimated annual mileage?\n• Any claims in the last 5 years?", "delay": 2500 },
+      { "role": "user", "content": "2000, about 12,000 km per year, and no claims.", "delay": 2000 },
+      { "role": "agent", "content": "Perfect driving record! 🎉 Based on your profile, I've generated a quote:\n\n**Comprehensive Cover**\n$89/month\n\n✓ Full theft & damage protection\n✓ Third-party liability\n✓ Roadside assistance included\n✓ No excess on windscreen claims\n\nWould you like to proceed, or should I adjust the coverage?", "delay": 3000 },
+      { "role": "user", "content": "That looks great. Let's go ahead.", "delay": 1500 },
+      { "role": "agent", "content": "Awesome! I'll just need to verify your details. Can you confirm your full name and driver's licence number?", "delay": 2000 },
+      { "role": "user", "content": "Sarah Chen, licence number 12345678.", "delay": 1500 },
+      { "role": "agent", "content": "Thanks Sarah! I've verified your licence with the transport authority. Everything checks out.\n\n✅ Policy created\n✅ Certificate of insurance generated\n✅ Payment details saved\n\nYou're now covered! Your policy documents have been sent to your email. Anything else I can help with?", "delay": 3500 },
+      { "role": "user", "content": "No, that was incredibly easy. Thanks Luca!", "delay": 1500 },
+      { "role": "agent", "content": "My pleasure, Sarah! Drive safe, and remember — I'm here 24/7 if you ever need me. 🚗💛", "delay": 2000 }
+    ]
+  },
+  "lodgeClaim": {
+    "title": "Lodge a Claim",
+    "messages": [
+      { "role": "user", "content": "I need to lodge a claim. My car was hit in a parking lot.", "delay": 0 },
+      { "role": "agent", "content": "I'm sorry to hear that! Let me help you get this sorted quickly. First — is everyone okay? Any injuries?", "delay": 1500 },
+      { "role": "user", "content": "Yes, everyone's fine. It happened while I was parked.", "delay": 1500 },
+      { "role": "agent", "content": "Glad to hear no one was hurt. Let's get your claim started. Can you tell me:\n\n• When did this happen?\n• Where was the vehicle parked?\n• Is the other party's information available?", "delay": 2500 },
+      { "role": "user", "content": "Yesterday around 3pm at Westfield shopping centre. The other driver left a note with their details.", "delay": 2000 },
+      { "role": "agent", "content": "Perfect — having their details will speed things up significantly. Can you upload a few photos of the damage? Just tap the camera icon below.", "delay": 2000 },
+      { "role": "user", "content": "[3 photos uploaded]", "delay": 1500 },
+      { "role": "agent", "content": "Got them! My image analysis shows:\n\n• Rear bumper: significant dent\n• Tail light: cracked\n• Estimated repair: $1,800 - $2,200\n\nI've matched this with three certified repair shops near you. Would you like me to book the nearest available slot?", "delay": 3000 },
+      { "role": "user", "content": "Yes please, whatever's fastest.", "delay": 1500 },
+      { "role": "agent", "content": "Done! I've booked you in at AutoCare Sydney for tomorrow at 10am.\n\n📋 **Claim Summary**\n• Claim #LC-2024-0847\n• Status: Approved\n• Repair scheduled: Tomorrow, 10am\n• Your excess: $0 (not-at-fault)\n\nThey'll handle everything directly with us. You just need to drop off the car.", "delay": 3500 },
+      { "role": "user", "content": "Wow, that was fast. No paperwork?", "delay": 1500 },
+      { "role": "agent", "content": "No paperwork needed! I've handled everything automatically. Your claim is approved, the repairer is notified, and you'll get SMS updates throughout.\n\nTotal time: 3 minutes. That's the Luka difference. 💛", "delay": 2500 }
+    ]
+  }
+}
