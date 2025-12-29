@@ -30,16 +30,16 @@ const Footer = () => {
 
             {/* Copyright */}
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} Luka Technologies Pty Ltd
+              © {new Date().getFullYear()} Luka
             </p>
           </div>
 
           {/* Disclaimer */}
           <div className="mt-8 pt-8 border-t border-border">
             <p className="text-xs text-muted-foreground text-center max-w-3xl mx-auto leading-relaxed">
-              This website is for informational purposes only and does not constitute an offer to sell or a solicitation 
-              of an offer to buy any securities. Any investment involves risk, and past performance is not indicative of 
-              future results. All projections and financial information presented are illustrative only. This is a private, 
+              This website is for informational purposes only and does not constitute an offer to sell or a solicitation
+              of an offer to buy any securities. Any investment involves risk, and past performance is not indicative of
+              future results. All projections and financial information presented are illustrative only. This is a private,
               access-controlled website intended for invited investors only.
             </p>
           </div>

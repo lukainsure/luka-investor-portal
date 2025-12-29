@@ -55,6 +55,11 @@ const ChatDemo = () => {
     let currentIndex = 0;
     let cumulativeDelay = 500;
 
+    const calculateReadingDelay = (text: string) => {
+      const words = text.trim().split(/\s+/).length;
+      return 1000 + (words * 100);
+    };
+
     const showNextMessage = () => {
       if (currentIndex >= messages.length) {
         setIsComplete(true);
@@ -71,13 +76,13 @@ const ChatDemo = () => {
           setIsTyping(false);
           setDisplayedMessages(prev => [...prev, message]);
           currentIndex++;
-          cumulativeDelay = message.delay || 1500;
+          cumulativeDelay = calculateReadingDelay(message.content);
           timeoutRef.current = setTimeout(showNextMessage, cumulativeDelay);
         }, 1000 + Math.random() * 500);
       } else {
         setDisplayedMessages(prev => [...prev, message]);
         currentIndex++;
-        cumulativeDelay = message.delay || 1500;
+        cumulativeDelay = calculateReadingDelay(message.content);
         timeoutRef.current = setTimeout(showNextMessage, cumulativeDelay);
       }
     };
@@ -119,7 +124,7 @@ const ChatDemo = () => {
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Experience how our AI agent handles real customer scenarios —
-              from getting a quote to settling a claim in minutes.
+              insuring a vehicle or lodging a claim, instantly.
             </p>
           </div>
 
