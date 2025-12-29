@@ -7,15 +7,15 @@ const TeamSection = () => {
       role: 'Pricing, Systems & AI',
       bio: 'Actuarial background with leadership roles in multiple successful insurance startups including OUTsurance and Youi. Former Group Strategy Officer at OUTsurance. Brings rare depth in pricing, strategy, and insurance systems.',
       image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
-      linkedin: '#',
+      linkedin: 'https://www.linkedin.com/in/karel-frank-69164952',
       // twitter: '#', removed
     },
     {
       name: 'Dawie Loots',
-      role: 'Finance & Systems',
-      bio: 'CA(SA) with 20 years in insurance, including CFO and CEO roles at MUA Insurance. AWS certified solution architect focused on data science and cloud-native systems. Bridges financial discipline with technical execution.',
+      role: 'Finance & Data',
+      bio: 'CA(SA) with 20+ years’ experience,mainly in insurance, including CFO and CEO roles at MUA Insurance Acceptances. AWS Certified Solutions Architect focused on data science and cloud-native systems. Bridges financial discipline with technical execution.',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
-      linkedin: '#',
+      linkedin: 'https://www.linkedin.com/in/dawieloots',
       // twitter: '#', removed
     },
     {
@@ -23,15 +23,15 @@ const TeamSection = () => {
       role: 'Brand, Marketing & Distribution',
       bio: 'MSc in Strategic Marketing, with 15 years’ executive experience across insurance and consumer brands. Deep expertise in consumer psychology, brand building, and innovative distribution channels.',
       image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop&crop=face',
-      linkedin: '#',
+      linkedin: 'https://www.linkedin.com/in/greeffmoolman',
       // twitter: '#', removed
     },
     {
-      name: 'Josh Hayden',
+      name: 'Josh Hayden', //'Johan Fourie'
       role: 'Operations, Service & Automation',
       bio: '15+ years across insurance and service industries in New Zealand and Australia (Hollard, Suncorp, Youi). Specialist in operations, automation, CRM, analytics, and end-to-end system integration.',
       image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face',
-      linkedin: '#',
+      linkedin: '#' //'https://www.linkedin.com/in/johan-joe-fourie-8301609/',
       // twitter: '#', removed
     },
   ];
