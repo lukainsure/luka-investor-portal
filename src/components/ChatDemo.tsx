@@ -6,7 +6,6 @@ import conversationsData from '@/data/conversations.json';
 interface Message {
   role: 'user' | 'agent';
   content: string;
-  delay: number;
 }
 
 interface Conversation {
@@ -57,7 +56,7 @@ const ChatDemo = () => {
 
     const calculateReadingDelay = (text: string) => {
       const words = text.trim().split(/\s+/).length;
-      return 1000 + (words * 100);
+      return 1100 + (words * 110);
     };
 
     const showNextMessage = () => {
