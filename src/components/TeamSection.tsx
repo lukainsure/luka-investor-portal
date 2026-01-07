@@ -31,7 +31,7 @@ const TeamSection = () => {
       role: 'Operations, Service & Automation',
       bio: '15+ years across insurance and service industries in New Zealand and Australia (Hollard, Suncorp, Youi). Specialist in operations, automation, CRM, analytics, and end-to-end system integration.',
       image: '/johan.jpeg',
-      linkedin: '#' //'https://www.linkedin.com/in/johan-joe-fourie-8301609/',
+      linkedin: 'https://www.linkedin.com/in/johan-joe-fourie-8301609/',
       // twitter: '#', removed
     },
   ];
