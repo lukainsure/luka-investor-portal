@@ -18,6 +18,7 @@ const ChatDemo = () => {
   const [sessionId, setSessionId] = useState('');
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -35,12 +36,14 @@ const ChatDemo = () => {
   useEffect(() => {
     // Focus input when agent finishes responding
     if (!isTyping) {
-      inputRef.current?.focus();
+      inputRef.current?.focus({ preventScroll: true });
     }
   }, [isTyping]);
 
   useEffect(() => {
     startConversation();
+    // Scroll to the demo section header on load
+    sectionRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
   const generateSessionId = () => {
@@ -55,7 +58,7 @@ const ChatDemo = () => {
     // Initial greeting
     const initialMessage: Message = {
       role: 'agent',
-      content: "Hi there! 👋 How can I help you with your 'whoopsie' today?"
+      content: "Hi there! 👋 I'm Luka, your personal broker in your pocket.  Let's get your cellphone insured!"
     };
 
     setIsTyping(true);
@@ -140,7 +143,7 @@ const ChatDemo = () => {
   };
 
   return (
-    <section id="demo" className="py-24 md:py-32 bg-card">
+    <section ref={sectionRef} id="demo" className="py-24 md:py-32 bg-card">
       <div className="container px-6">
         <div className="max-w-5xl mx-auto">
           {/* Section Header */}
