@@ -2,21 +2,22 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Bot, User, RotateCcw, Send } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 interface Message {
   role: 'user' | 'agent';
   content: string;
 }
 
-const N8N_WEBHOOK_URL = 'https://esvedlub77lghljsymyov3dn6y0svmnr.lambda-url.af-south-1.on.aws/chat';
-//const N8N_WEBHOOK_URL = 'https://dawie.app.n8n.cloud/webhook/820c971d-1ed4-42a0-b881-b77485738d29';
+const FASTAPI_URL = 'https://esvedlub77lghljsymyov3dn6y0svmnr.lambda-url.af-south-1.on.aws/chat';
 
 const ChatDemo = () => {
   const [displayedMessages, setDisplayedMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [inputMessage, setInputMessage] = useState('');
-  const [conversationId, setConversationId] = useState('');
+  const [sessionId, setSessionId] = useState('');
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -32,22 +33,29 @@ const ChatDemo = () => {
   }, [displayedMessages, isTyping]);
 
   useEffect(() => {
+    // Focus input when agent finishes responding
+    if (!isTyping) {
+      inputRef.current?.focus();
+    }
+  }, [isTyping]);
+
+  useEffect(() => {
     startConversation();
   }, []);
 
-  const generateConversationId = () => {
-    return 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  const generateSessionId = () => {
+    return 'session_' + Math.random().toString(36).substr(2, 9);
   };
 
   const startConversation = () => {
     setDisplayedMessages([]);
     setIsTyping(false);
-    setConversationId(generateConversationId());
+    setSessionId(generateSessionId());
 
     // Initial greeting
     const initialMessage: Message = {
       role: 'agent',
-      content: "Hi there, I'm Luka, your personal broker in your pocket. Let's get your cellphone insured."
+      content: "Hi there! 👋 How can I help you with your 'whoopsie' today?"
     };
 
     setIsTyping(true);
@@ -61,44 +69,65 @@ const ChatDemo = () => {
     if (e) e.preventDefault();
     if (!inputMessage.trim() || isTyping) return;
 
-    const userMessage: Message = {
+    const messageText = inputMessage.trim();
+    const newUserMessage: Message = {
       role: 'user',
-      content: inputMessage.trim()
+      content: messageText
     };
 
-    setDisplayedMessages(prev => [...prev, userMessage]);
+    setDisplayedMessages(prev => [...prev, newUserMessage]);
     setInputMessage('');
     setIsTyping(true);
 
+    // FastAPI Call
+    console.log('Attempting to connect to backend at:', FASTAPI_URL);
+    console.log('Using session ID:', sessionId);
+
+    // Only include messages before the current one for history
+    const messageHistory = displayedMessages.map(msg => ({
+      text: msg.content,
+      sender: msg.role === 'user' ? 'user' : 'agent'
+    }));
+
     try {
-      const response = await fetch(N8N_WEBHOOK_URL, {
+      const response = await fetch(FASTAPI_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         body: JSON.stringify({
-          message: userMessage.content,
-          history: displayedMessages,
-          conversation_id: conversationId
+          message: messageText,
+          session_id: sessionId,
+          history: messageHistory.map(msg => ({
+            text: msg.text,
+            sender: msg.sender === 'user' ? 'user' : 'assistant'
+          }))
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch response from Luka');
+        console.error('Backend response not ok:', {
+          status: response.status,
+          statusText: response.statusText
+        });
+        throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
+      const agentResponse = data.response;
+
       const botMessage: Message = {
         role: 'agent',
-        content: data.output || data.message || "I'm sorry, I'm having trouble connecting right now. Please try again later."
+        content: agentResponse || "I'm sorry, I'm having trouble connecting right now. Please try again later."
       };
 
       setDisplayedMessages(prev => [...prev, botMessage]);
     } catch (error) {
-      console.error('Chat Error:', error);
+      console.error("Failed to send chat message:", error);
       const errorMessage: Message = {
         role: 'agent',
-        content: "Oops! I encountered an error. Please make sure the n8n workflow is running."
+        content: `Connection error: ${error.message}. Please ensure the backend is running.`
       };
       setDisplayedMessages(prev => [...prev, errorMessage]);
     } finally {
@@ -182,7 +211,9 @@ const ChatDemo = () => {
                       : 'bg-secondary text-foreground rounded-tl-sm'
                       }`}
                   >
-                    <p className="text-sm whitespace-pre-line leading-relaxed">{message.content}</p>
+                    <div className="prose prose-invert prose-sm max-w-none">
+                      <ReactMarkdown>{message.content}</ReactMarkdown>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -208,6 +239,7 @@ const ChatDemo = () => {
             <div className="px-6 py-4 border-t border-border bg-secondary/30">
               <form onSubmit={handleSendMessage} className="flex gap-2">
                 <Input
+                  ref={inputRef}
                   placeholder="Type your message..."
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
