@@ -8,7 +8,7 @@ interface Message {
   role: 'user' | 'agent';
   content: string;
 }
-
+//const FASTAPI_URL = 'http://localhost:8000/chat';
 const FASTAPI_URL = 'https://esvedlub77lghljsymyov3dn6y0svmnr.lambda-url.af-south-1.on.aws/chat';
 
 const ChatDemo = () => {
@@ -20,17 +20,55 @@ const ChatDemo = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
-  const scrollToBottom = () => {
+  const [showScrollButton, setShowScrollButton] = useState(false);
+  const [hasNewMessages, setHasNewMessages] = useState(false);
+
+  const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
         top: chatContainerRef.current.scrollHeight,
-        behavior: 'smooth'
+        behavior
       });
+      setHasNewMessages(false);
+    }
+  };
+
+  const handleScroll = () => {
+    if (chatContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+      // If we are within 50px of the bottom, consider it "at bottom"
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 50;
+      setShowScrollButton(!isNearBottom);
+      if (isNearBottom) {
+        setHasNewMessages(false);
+      }
     }
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if (displayedMessages.length > 0) {
+      const lastMessage = displayedMessages[displayedMessages.length - 1];
+      const container = chatContainerRef.current;
+
+      if (container) {
+        if (lastMessage.role === 'user') {
+          // Full scroll for user messages
+          scrollToBottom();
+        } else if (lastMessage.role === 'agent' && !isTyping) {
+          // Peek scroll for agent messages: scroll just enough to show the start
+          // We scroll a fixed amount (e.g., 60px) or slightly more to reveal the header/avatar
+          container.scrollBy({ top: 80, behavior: 'smooth' });
+
+          // Check if there's more content below the fold after the peek
+          setTimeout(() => {
+            const isAtBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 50;
+            if (!isAtBottom) {
+              setHasNewMessages(true);
+            }
+          }, 500); // Wait for smooth scroll to finish
+        }
+      }
+    }
   }, [displayedMessages, isTyping]);
 
   useEffect(() => {
@@ -42,8 +80,6 @@ const ChatDemo = () => {
 
   useEffect(() => {
     startConversation();
-    // Scroll to the demo section header on load
-    sectionRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
   const generateSessionId = () => {
@@ -143,7 +179,7 @@ const ChatDemo = () => {
   };
 
   return (
-    <section ref={sectionRef} id="demo" className="py-24 md:py-32 bg-card">
+    <section ref={sectionRef} id="demo" className="py-12 md:py-24 bg-card">
       <div className="container px-6">
         <div className="max-w-5xl mx-auto">
           {/* Section Header */}
@@ -180,61 +216,82 @@ const ChatDemo = () => {
             </div>
 
             {/* Chat Messages */}
-            <div
-              ref={chatContainerRef}
-              className="h-[400px] md:h-[500px] overflow-y-auto p-6 space-y-4 overscroll-contain touch-pan-y"
-            >
-              {displayedMessages.length === 0 && !isTyping && (
-                <div className="h-full flex flex-col items-center justify-center text-muted-foreground opacity-50">
-                  <Bot className="w-12 h-12 mb-4" />
-                  <p>Initializing chat...</p>
-                </div>
-              )}
-              {displayedMessages.map((message, index) => (
-                <div
-                  key={index}
-                  className={`flex gap-3 animate-fade-in ${message.role === 'user' ? 'flex-row-reverse' : ''
-                    }`}
-                >
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${message.role === 'user'
-                      ? 'bg-secondary'
-                      : 'bg-primary'
-                      }`}
-                  >
-                    {message.role === 'user' ? (
-                      <User className="w-4 h-4 text-foreground" />
-                    ) : (
-                      <Bot className="w-4 h-4 text-primary-foreground" />
-                    )}
+            <div className="relative">
+              <div
+                ref={chatContainerRef}
+                onScroll={handleScroll}
+                className="h-[450px] md:h-[600px] overflow-y-auto p-3 md:p-6 space-y-3 md:space-y-4 overscroll-contain touch-pan-y scroll-smooth"
+              >
+                {displayedMessages.length === 0 && !isTyping && (
+                  <div className="h-full flex flex-col items-center justify-center text-muted-foreground opacity-50">
+                    <Bot className="w-12 h-12 mb-4" />
+                    <p>Initializing chat...</p>
                   </div>
+                )}
+                {displayedMessages.map((message, index) => (
                   <div
-                    className={`max-w-[75%] px-4 py-3 rounded-2xl ${message.role === 'user'
-                      ? 'bg-primary text-primary-foreground rounded-tr-sm'
-                      : 'bg-secondary text-foreground rounded-tl-sm'
+                    key={index}
+                    className={`flex gap-3 animate-fade-in ${message.role === 'user' ? 'flex-row-reverse' : ''
                       }`}
                   >
-                    <div className="prose prose-invert prose-sm max-w-none">
-                      <ReactMarkdown>{message.content}</ReactMarkdown>
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${message.role === 'user'
+                        ? 'bg-secondary'
+                        : 'bg-primary'
+                        }`}
+                    >
+                      {message.role === 'user' ? (
+                        <User className="w-4 h-4 text-foreground" />
+                      ) : (
+                        <Bot className="w-4 h-4 text-primary-foreground" />
+                      )}
+                    </div>
+                    <div
+                      className={`max-w-[85%] md:max-w-[75%] px-3 py-2 md:px-4 md:py-3 rounded-2xl text-[14px] md:text-base leading-relaxed ${message.role === 'user'
+                        ? 'bg-primary text-primary-foreground rounded-tr-sm'
+                        : 'bg-secondary text-foreground rounded-tl-sm'
+                        }`}
+                    >
+                      <div className="prose prose-invert prose-sm max-w-none">
+                        <ReactMarkdown>{message.content}</ReactMarkdown>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
 
-              {/* Typing Indicator */}
-              {isTyping && (
-                <div className="flex gap-3 animate-fade-in">
-                  <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                    <Bot className="w-4 h-4 text-primary-foreground" />
-                  </div>
-                  <div className="bg-secondary px-4 py-3 rounded-2xl rounded-tl-sm">
-                    <div className="flex gap-1">
-                      <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                {/* Typing Indicator */}
+                {isTyping && (
+                  <div className="flex gap-3 animate-fade-in">
+                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                      <Bot className="w-4 h-4 text-primary-foreground" />
+                    </div>
+                    <div className="bg-secondary px-4 py-3 rounded-2xl rounded-tl-sm">
+                      <div className="flex gap-1">
+                        <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <span className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
+              </div>
+
+              {/* Floating New Message Indicator */}
+              {hasNewMessages && (
+                <button
+                  type="button"
+                  onClick={() => scrollToBottom()}
+                  className="absolute bottom-4 right-4 bg-primary text-primary-foreground w-10 h-10 rounded-full shadow-xl animate-fade-in flex items-center justify-center z-10 hover:scale-110 active:scale-95 transition-all border border-primary-foreground/10 group"
+                  aria-label="Scroll to new messages"
+                >
+                  <div className="relative flex items-center justify-center">
+                    <span className="text-lg leading-none group-hover:translate-y-0.5 transition-transform duration-200">↓</span>
+                    <span className="absolute -top-3 -right-3 flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    </span>
+                  </div>
+                </button>
               )}
             </div>
 
@@ -263,12 +320,12 @@ const ChatDemo = () => {
                 </Button>
               </form>
             </div>
-          </div>
 
-          {/* Demo Note */}
-          <p className="text-center text-sm text-muted-foreground mt-6">
-            This is an interactive demonstration connected to a live AI agent.
-          </p>
+            {/* Demo Note */}
+            <p className="text-center text-sm text-muted-foreground mt-6">
+              This is an interactive demonstration connected to a live AI agent.
+            </p>
+          </div>
         </div>
       </div>
     </section>
