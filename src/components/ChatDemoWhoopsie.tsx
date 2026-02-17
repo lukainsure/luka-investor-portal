@@ -9,7 +9,7 @@ interface Message {
   content: string;
 }
 //const FASTAPI_URL = 'http://localhost:8000/chat';
-const FASTAPI_URL = 'http://luka-salesbot-production.up.railway.app/web';
+const FASTAPI_URL = 'https://luka-salesbot-production.up.railway.app/web';
 //const FASTAPI_URL = 'https://esvedlub77lghljsymyov3dn6y0svmnr.lambda-url.af-south-1.on.aws/chat';
 
 const ChatDemo = () => {
