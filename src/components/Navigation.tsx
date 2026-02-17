@@ -13,7 +13,7 @@ const Navigation = () => {
   }, []);
 
   const navLinks = [
-    { href: '#problem', label: 'Problem' },
+    { href: '#problem', label: 'The Problem' },
     { href: '#solution', label: 'Solution' },
     { href: '#demo', label: 'Demo' },
     { href: '#roadmap', label: 'Roadmap' },
